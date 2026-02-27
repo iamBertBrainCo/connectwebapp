@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect — With Curiosity & Candour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F5EFE4;
+    --warm-white: #FAF6F0;
+    --ink: #1A1410;
+    --burgundy: #6B1F2A;
+    --rose: #A84A58;
+    --gold: #B8925A;
+    --gold-light: #D4AF7A;
+    --muted: #8A7A6A;
+    --divider: rgba(184, 146, 90, 0.25);
+    --card-bg: rgba(250, 246, 240, 0.85);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Gradient bg */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(168, 74, 88, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 90%, rgba(107, 31, 42, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LANDING ── */
+  #landing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-mark {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+
+  .logo-mark svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .title-lockup h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .title-lockup h1 em {
+    font-style: italic;
+    color: var(--burgundy);
+  }
+
+  .subtitle {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3rem;
+  }
+
+  .landing-desc {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--muted);
+    max-width: 420px;
+    margin: 0 auto 3.5rem;
+    font-style: italic;
+  }
+
+  .begin-btn {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    background: var(--burgundy);
+    border: none;
+    padding: 1.1rem 3rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .begin-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+    z-index: -1;
+  }
+
+  .begin-btn:hover {
+    color: var(--ink);
+  }
+
+  .begin-btn:hover::after {
+    transform: scaleX(1);
+  }
+
+  .landing-note {
+    margin-top: 2.5rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .exp-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 8rem;
+  }
+
+  /* Header */
+  .exp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .exp-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .progress-wrap {
+    text-align: right;
+  }
+
+  .progress-label {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .progress-bar {
+    width: 120px;
+    height: 1px;
+    background: var(--divider);
+    position: relative;
+    margin-left: auto;
+  }
+
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.6s ease;
+  }
+
+  /* Set indicator */
+  .set-badge {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .set-badge::before, .set-badge::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--divider);
+  }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid rgba(184, 146, 90, 0.15);
+    padding: 3rem 3.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: cardReveal 0.5s ease forwards;
+    backdrop-filter: blur(8px);
+  }
+
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 400;
+    color: rgba(184, 146, 90, 0.12);
+    line-height: 1;
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  .card-type {
+    font-family: 'Jost', sans-serif;
+    font-weight: 200;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  .card-type.question { color: var(--rose); }
+  .card-type.kino { color: var(--gold); }
+
+  .card-kino-icon {
+    display: inline-block;
+    margin-right: 0.4rem;
+  }
+
+  .card-text {
+    font-size: 1.45rem;
+    line-height: 1.65;
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-text.question-text {
+    font-style: italic;
+  }
+
+  .card-sub {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--divider);
+  }
+
+  /* Kino card special styling */
+  .card.kino-card {
+    background: linear-gradient(135deg, rgba(107,31,42,0.03) 0%, rgba(184,146,90,0.05) 100%);
+    border-color: rgba(184, 146, 90, 0.25);
+  }
+
+  /* Navigation */
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+  }
+
+  .nav-btn {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--divider);
+    color: var(--muted);
+    padding: 0.85rem 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .nav-btn.primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--warm-white);
+  }
+
+  .nav-btn.primary:hover {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+    color: var(--warm-white);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .step-counter {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  /* Ornamental divider */
+  .ornament {
+    text-align: center;
+    color: var(--gold-light);
+    font-size: 1rem;
+    letter-spacing: 0.5rem;
+    margin: 2.5rem 0;
+    opacity: 0.6;
+  }
+
+  /* Finish screen */
+  #finish {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .finish-ornament {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    opacity: 0.7;
+  }
+
+  .finish-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .finish-sub {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 380px;
+    margin: 0 auto 3rem;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .card { padding: 2rem 1.8rem; }
+    .card-text { font-size: 1.2rem; }
+    .exp-container { padding: 2.5rem 1.2rem 6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<section id="landing">
+  <div class="logo-mark">
+    <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="27" stroke="#B8925A" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="28" cy="28" r="20" stroke="#B8925A" stroke-width="0.4" opacity="0.3"/>
+      <path d="M28 14 C28 14, 14 21, 14 30 C14 37.7 20.3 42 28 42 C35.7 42 42 37.7 42 30 C42 21 28 14 28 14Z" fill="#6B1F2A" opacity="0.15"/>
+      <path d="M22 28 Q28 22 34 28 Q28 38 22 28Z" fill="#6B1F2A" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="title-lockup">
+    <h1><em>Connect</em></h1>
+  </div>
+  <p class="subtitle">With Curiosity &amp; Candour</p>
+
+  <p class="landing-desc">
+    Connect. A shared journey inward.<br>
+    Two people. One honest conversation at a time.
+  </p>
+
+  <button class="begin-btn" onclick="startExperience()">Begin the Experience</button>
+
+  <p class="landing-note">Set aside 45–90 minutes · Find a quiet space · Be present</p>
+</section>
+
+<!-- ══ EXPERIENCE ══ -->
+<section id="experience">
+  <div class="exp-container">
+    <header class="exp-header">
+      <div class="exp-brand"><em>Connect</em></div>
+      <div class="progress-wrap">
+        <div class="progress-label">Your journey</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </header>
+
+    <div id="setLabel" class="set-badge">Set One · Opening</div>
+
+    <div id="cardArea"></div>
+
+    <div class="nav-controls">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <span class="step-counter" id="stepCounter">1 of 48</span>
+      <button class="nav-btn primary" id="nextBtn" onclick="navigate(1)">Continue →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINISH ══ -->
+<section id="finish">
+  <div class="finish-ornament">✦</div>
+  <h2 class="finish-title">You've arrived.</h2>
+  <p class="finish-sub">
+    Something rare was created here tonight — not a performance, but a glimpse into two real people. Sit with that.
+  </p>
+  <button class="begin-btn" onclick="restart()">Begin Again</button>
+</section>
+
+<script>
+// ══ DATA ══
+// Each entry: { type: 'question'|'kino', set: 1|2|3, text, sub? }
+const entries = [
+
+  // SET 1 ─ Opening
+  { type:'question', set:1, text:"Given the choice of anyone in the world, whom would you want as a dinner guest?", sub:"Take your time. There's no right answer — only an honest one." },
+  { type:'kino', set:1, text:"Mirror their posture gently.", sub:"Let your bodies begin to sync. This is the quiet language of being present with each other." },
+  { type:'question', set:1, text:"Would you like to be famous? In what way?", sub:"Fame is just an amplifier — what would you want it to amplify?" },
+  { type:'question', set:1, text:"Before making a telephone call, do you ever rehearse what you are going to say? Why?", sub:"Listen carefully." },
+  { type:'kino', set:1, text:"Make eye contact and hold it one breath longer than feels comfortable.", sub:"When they finish speaking, pause. Look at them fully. Let silence exist. Connection lives in the space between words." },
+  { type:'question', set:1, text:"What would constitute a perfect day for you?", sub:"" },
+  { type:'question', set:1, text:"When did you last sing to yourself? To someone else?", sub:"" },
+  { type:'kino', set:1, text:"Hold a hand, give a gentle squeeze if they had said anything relatable to you.", sub:"If something they share genuinely lands. Be intentional, let them know without saying." },
+  { type:'question', set:1, text:"If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you want?", sub:"" },
+  { type:'question', set:1, text:"Do you have a secret hunch about how you will die?", sub:"Morbid? Perhaps." },
+  { type:'kino', set:1, text:"Lean in closer when you speak.", sub:"Simply close enough that the voice becomes something private." },
+  { type:'question', set:1, text:"Name three things you and your partner appear to have in common.", sub:"" },
+  { type:'question', set:1, text:"For what in your life do you feel most grateful?", sub:"Gratitude is ability to love life." },
+
+  // SET 2 ─ Deepening
+  { type:'question', set:2, text:"If a crystal ball could tell you the truth about yourself, your life, the future, or anything else — what would you want to know?", sub:"" },
+  { type:'kino', set:2, text:"Take their hand, look at their palms.", sub:"Try palm reading, tell them what is their hidden potential." , sub:"Trace the lines gently with a fingertip. Keep it light, curious, a little theatrical." },
+  { type:'question', set:2, text:"Is there something that you've dreamed of doing for a long time? Why haven't you done it?", sub:"Hold the space gently." },
+  { type:'question', set:2, text:"What is the greatest accomplishment of your life?", sub:"Not their résumé." },
+  { type:'question', set:2, text:"What do you value most in a friendship?", sub:" " },
+  { type:'kino', set:2, text:"Gently brush their forearm.", sub:"Reach over and brush their forearm lightly, observe how giving and receiving their touch feels like. Don't say anything." },
+  { type:'question', set:2, text:"What is your most treasured memory?", sub:"You're being given something precious here. Receive it accordingly." },
+  { type:'question', set:2, text:"What is your most terrible memory?", sub:"Hold space for each other." },
+  { type:'kino', set:2, text:"If they had shared something vulnerable — hold their hand and squeeze it 3x. If not, squeeze 1x.", sub:"Give a slight nod and acknowledge them.' No words needed." },
+  { type:'question', set:2, text:"If you knew that in one year you would die suddenly, would you change anything about the way you are now living? Why?", sub:" " },
+  { type:'question', set:2, text:"What does friendship mean to you?", sub:"" },
+  { type:'kino', set:2, text:"Point something out in your environment.", sub:"\"Look at us\" Try to build a story of your surrounding and both of you." },
+  { type:'question', set:2, text:"What roles do love and affection play in your life?", sub:" " },
+  { type:'question', set:2, text:"Alternate sharing something you consider a positive characteristic of your partner — 5 items each.", sub:"Take turns. One quality at a time. Be specific." },
+  { type:'question', set:2, text:"How close and warm is your family? Do you feel your childhood was happier than most?", sub:"Here, you're entering the territory of origin. Hold it with care." },
+  { type:'question', set:2, text:"How do you feel about your relationship with your mother?", sub:"Non-judgement. Be present and listen." },
+
+  // SET 3 ─ Arrival
+  { type:'question', set:3, text:"Make three true 'we' statements each. For instance, 'We are both in this room feeling...'", sub:"Notice if something in the air shifts." },
+  { type:'kino', set:3, text:"Ask if you can hold their hand for the next question.", sub:"\"Can I hold your hand while we do this?\" If they offer — hold it warmly but without grip. No pressure." },
+  { type:'question', set:3, text:"Complete this sentence: 'I wish I had someone with whom I could share...'", sub:" " },
+  { type:'question', set:3, text:"If you were going to become a close friend with your partner, please share what would be important for them to know.", sub:" " },
+  { type:'question', set:3, text:"Tell your partner what you like about them; be very honest this time, saying things that you might not say to someone you just met.", sub:"Say the thing you'd normally hold back. This is the entire point of being here." },
+  { type:'kino', set:3, text:"Adjust something physical for them — only if it feels natural.", sub:"Learn how quiet care looks like for you both. Adjust a collar, brush a loose thread. Never forced." },
+  { type:'question', set:3, text:"Share with your partner an embarrassing moment in your life.", sub:"Embarrassment shared becomes humour and then warmth. Let yourself be imperfect here." },
+  { type:'question', set:3, text:"When did you last cry in front of another person? By yourself?", sub:"" },
+  { type:'kino', set:3, text:"Initial footise play for 1 min", sub:"Casual and fun play. Let it be natural and not forced." },
+  { type:'question', set:3, text:"Tell your partner something that you like about them already.", sub:"" },
+  { type:'question', set:3, text:"What, if anything, is too serious to be joked about?", sub:" " },
+  { type:'question', set:3, text:"If you were to die this evening with no opportunity to communicate with anyone, what would you most regret not having told someone? Why haven't you told them yet?", sub:"The most important question of the night. Answer it honestly." },
+  { type:'kino', set:3, text:"Place your hand over theirs and say, i hear you.", sub:"Simply — your hand, over theirs & just breath." },
+  { type:'question', set:3, text:"Your house, containing everything you own, catches fire. After saving your loved ones and pets, you have time to safely make a final dash to save one item. What would it be? Why?", sub:"" },
+  { type:'question', set:3, text:"Of all the people in your family, whose death would you find most disturbing? Why?", sub:" " },
+  { type:'question', set:3, text:"Share a personal problem and ask your partner's advice on how they might handle it. Also, ask your partner to reflect back to you how you seem to be feeling about the problem you have chosen.", sub:"The final question. Receive their counsel with an open heart. Then — look at each other. Four minutes of unbroken eye contact, if you dare." },
+
+];
+
+const totalEntries = entries.length;
+let current = 0;
+
+const setNames = {
+  1: 'Set One · Opening',
+  2: 'Set Two · Deepening',
+  3: 'Set Three · Arrival',
+};
+
+function startExperience() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('experience').style.display = 'block';
+  renderCard();
+}
+
+function renderCard() {
+  const entry = entries[current];
+  const total = totalEntries;
+  const pct = Math.round(((current + 1) / total) * 100);
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stepCounter').textContent = `${current + 1} of ${total}`;
+  document.getElementById('setLabel').textContent = setNames[entry.set];
+
+  const cardArea = document.getElementById('cardArea');
+  cardArea.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'card' + (entry.type === 'kino' ? ' kino-card' : '');
+
+  const cardNum = document.createElement('div');
+  cardNum.className = 'card-number';
+  cardNum.textContent = (current + 1);
+  card.appendChild(cardNum);
+
+  const typeLabel = document.createElement('div');
+  typeLabel.className = 'card-type ' + entry.type;
+  if (entry.type === 'kino') {
+    typeLabel.innerHTML = '<span class="card-kino-icon">✦</span> Try this out';
+  } else {
+    typeLabel.textContent = 'Question';
+  }
+  card.appendChild(typeLabel);
+
+  const text = document.createElement('p');
+  text.className = 'card-text' + (entry.type === 'question' ? ' question-text' : '');
+  text.textContent = `"${entry.text}"`;
+  card.appendChild(text);
+
+  if (entry.sub) {
+    const sub = document.createElement('p');
+    sub.className = 'card-sub';
+    sub.textContent = entry.sub;
+    card.appendChild(sub);
+  }
+
+  cardArea.appendChild(card);
+
+  // Button states
+  document.getElementById('prevBtn').disabled = current === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  if (current === total - 1) {
+    nextBtn.textContent = 'Complete ✦';
+    nextBtn.onclick = () => {
+      document.getElementById('experience').style.display = 'none';
+      const fin = document.getElementById('finish');
+      fin.style.display = 'flex';
+      fin.style.animation = 'cardReveal 0.6s ease forwards';
+    };
+  } else {
+    nextBtn.textContent = 'Continue →';
+    nextBtn.onclick = () => navigate(1);
+  }
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= totalEntries) return;
+  current = next;
+  renderCard();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  current = 0;
+  document.getElementById('finish').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+  document.getElementById('experience').style.display = 'none';
+}
+</script>
+</body>
+</html>
